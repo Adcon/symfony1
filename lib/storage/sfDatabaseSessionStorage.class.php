@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -16,7 +16,7 @@
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDatabaseSessionStorage.class.php 22037 2009-09-15 11:00:20Z fabien $
  */
 abstract class sfDatabaseSessionStorage extends sfSessionStorage
 {
@@ -63,11 +63,11 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
 
     // use this object as the session handler
     session_set_save_handler(array($this, 'sessionOpen'),
-                             array($this, 'sessionClose'),
-                             array($this, 'sessionRead'),
-                             array($this, 'sessionWrite'),
-                             array($this, 'sessionDestroy'),
-                             array($this, 'sessionGC'));
+      array($this, 'sessionClose'),
+      array($this, 'sessionRead'),
+      array($this, 'sessionWrite'),
+      array($this, 'sessionDestroy'),
+      array($this, 'sessionGC'));
 
     // start our session
     session_start();
@@ -101,7 +101,11 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
 
     // get the database and connection
     $databaseClass = get_class($database);
-    if ($databaseClass == 'sfDoctrineDatabase')
+    if($databaseClass == 'sfPropelDatabase')
+    {
+      $this->db = Propel::getConnection($database->getParameter('name'));
+    }
+    elseif($databaseClass == 'sfDoctrineDatabase')
     {
       $this->db = $database->getConnection();
     }
